@@ -95,12 +95,12 @@
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 1, 1, 3, 1, 1, 1, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 1, 0, 0, 7, 0, 1, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 1, 0, 2, 0, 1, 1, 0, 0, 0, 0],
-				[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-				[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 1, 0, 3, 0, 0, 1, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -197,6 +197,8 @@
 			wrapper.style.width = xL * 30 + 'px';
 
 			// 遍历关卡纵坐标
+			// 获取箱子的数量
+			window.boxCount = 0;
 			for (var i = 0; i < yL; i++) {
 				// 遍历关卡横坐标
 				for (var j = 0; j < xL; j++) {
@@ -213,7 +215,8 @@
 							img.src = guys[temp - 4];
 						} else {
 							if (temp == 2) {
-								span.id = 'box'
+								span.id = 'box';
+								window.boxCount++;
 							} else if (temp == 3) {
 								span.id = 'ball'
 							}
@@ -264,8 +267,19 @@
 						// 盒子移动后的格子
 						var moveGrid = getMoveGrid(box, dir);
 						// 如果移动的位置有物品则查看是否为球 或者空
-						if (moveGrid.id == 'ball' || !hasImgTag(moveGrid)) {
-							if (moveGrid.id == 'ball') {
+						if (!hasImgTag(moveGrid)) {
+							// 盒子和格子切换位置
+							changeImg(box, moveGrid, 'box', dir)
+							changeImg(gameCharacter, box, 'gameCharacter', dir)
+						} else if (moveGrid.id == 'ball') {
+							// 如果为球
+							window.boxCount--;
+							changeImg(box, moveGrid, 'box', dir)
+							changeImg(gameCharacter, box, 'gameCharacter', dir)
+
+							moveGrid.id = moveGrid.innerHTML = '';
+							if (boxCount == 0) {
+								// 如果盒子的数量为0
 								setTimeout(function () {
 									var f = confirm("点击确认进入下一关");
 									if (f) {
@@ -282,11 +296,8 @@
 									}
 								}, 50);
 							}
-							// 盒子和格子切换位置
-							changeImg(box, moveGrid, 'box', dir)
-							changeImg(gameCharacter, box, 'gameCharacter', dir)
-							// alert('游戏胜利')
 						}
+						// alert('游戏胜利')
 					}
 				}
 			}
