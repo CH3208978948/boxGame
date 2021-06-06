@@ -193,8 +193,9 @@
 			// 关卡横坐标
 			window.xL = g1[level][0].length;
 			// 动态设置盒子宽高 一个盒子h: 30px   w: 30px
-			wrapper.style.height = yL * 30 + 'px';
-			wrapper.style.width = xL * 30 + 'px';
+			console.log(`盒子${yL}个格子共计高： `, wrapper.style.height = yL * 30 + 'px');
+			console.log(`盒子${xL}个格子共计宽： `, wrapper.style.width = xL * 30 + 'px');
+
 
 			// 遍历关卡纵坐标
 			// 获取箱子的数量
@@ -263,7 +264,7 @@
 					// 如果有图片标签 则判断是否为盒子
 					if (moveGrid.id == 'box') {
 						// 获取盒子
-						var box = document.querySelector('#box');
+						var box = moveGrid;
 						// 盒子移动后的格子
 						var moveGrid = getMoveGrid(box, dir);
 						// 如果移动的位置有物品则查看是否为球 或者空
