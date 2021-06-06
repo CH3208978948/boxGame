@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		body::-webkit-scrollbar {
+			display: none;
+		}
+
+		.wrapper {
+			position: relative;
+			/* width: 450px;
+			height: 540px; */
+			margin: 0 auto;
+			background-color: #ccc;
+		}
+
+		/* .mask::after {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 100%;
+			background-color: #ccc4;
+		} */
+
+		.wrapper span {
+			display: inline-block;
+			width: 30px;
+			height: 30px;
+			/* 取消下边距离 */
+			vertical-align: middle;
+			background-image: url(images/block.gif);
+			background-size: cover;
+		}
+
+		.wrapper span img {
+			width: 100%;
+			height: 100%;
+			vertical-align: middle;
+		}
+
+		/* .wrapper span::after {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+		} */
+
+		#set-level {
+			position: fixed;
+			right: 10px;
+			top: 50%;
+			margin-top: -5px;
+		}
+
+		/* 设置背景
+		.wrapper .wall::after {
+			background-image: url(img/wall.png);
+		}
+
+		.wrapper .box::after {
+			background-image: url(img/box.png);
+		}
+
+		.wrapper .ball::after {
+			background-image: url(img/ball.png);
+		} */
+	</style>
+</head>
+
+<body>
+	<button id="restart" onclick="createBox()">重新开始</button>
+	<div class="wrapper">
+
+	</div>
+	<select name="level" id="set-level">
+		<option value="0">关卡1</option>
+		<option value="1">关卡2</option>
+		<option value="2">关卡3</option>
+		<option value="3">关卡4</option>
+	</select>
+	<script>
+		var g1 = [
+			// 关卡1
+			[
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 1, 1, 3, 1, 1, 1, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 1, 0, 0, 7, 0, 1, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 1, 0, 2, 0, 1, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			],
+			// 关卡2
+			[
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			],
+			// 关卡3
+			[
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1],
+				[0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1],
+				[1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1],
+				[1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 3, 1, 0, 1],
+				[1, 0, 6, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1],
+				[1, 0, 0, 2, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1],
+				[1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+				[1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1],
+				[0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0],
+				[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			],
+			// 关卡4
+			[
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+				[0, 0, 1, 0, 1, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0],
+				[0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0],
+				[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+				[0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0],
+				[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+				[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+				[0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0],
+				[0, 0, 1, 0, 0, 6, 2, 0, 0, 0, 0, 0, 0, 1, 0],
+				[0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0],
+				[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			]
+		];
+		// block 为纯色背景 wall 为墙 ball 为球 box 为盒子 
+		var imgs = ['images/block.gif', 'images/wall.png', 'images/box.png', 'images/ball.png'];
+		var guys = ['images/left.png', 'images/up.png', 'images/right.png', 'images/down.png'];
+		var wrapper = document.querySelector('.wrapper');
+		var setLevel = document.querySelector('#set-level');
+
+		// 关卡
+		var level = 0;
+
+		// 渲染关卡
+		createBox();
+		function createBox() {
+			wrapper.innerHTML = '';
+			setLevel.children[level].selected = 'selected';
+			document.addEventListener('keyup', main);
+			// 关卡纵坐标
+			window.yL = g1[level].length;
+			// 关卡横坐标
+			window.xL = g1[level][0].length;
+			// 动态设置盒子宽高 一个盒子h: 30px   w: 30px
+			wrapper.style.height = yL * 30 + 'px';
+			wrapper.style.width = xL * 30 + 'px';
+
+			// 遍历关卡纵坐标
+			for (var i = 0; i < yL; i++) {
+				// 遍历关卡横坐标
+				for (var j = 0; j < xL; j++) {
+					var span = document.createElement('span');
+					// 一行有15格
+					span.index = i * 15 + j;
+					// console.ldog(span, span.index);
+					// 如果有其他元素 则添加图片
+					var temp = g1[level][i][j];
+					if (temp != 0) {
+						var img = document.createElement('img');
+						if (temp >= 4) { // 4为游戏人物(上右下左)
+							span.id = 'gameCharacter';
+							img.src = guys[temp - 4];
+						} else {
+							if (temp == 2) {
+								span.id = 'box'
+							} else if (temp == 3) {
+								span.id = 'ball'
+							}
+							img.src = imgs[temp];
+						}
+						span.appendChild(img)
+					}
+					wrapper.appendChild(span)
+				}
+			}
+		}
+
+		// 选择关卡
+		setLevel.onchange = function () {
+			level = this.value;
+			setLevel.blur();
+			createBox();
+		}
+
+
+		// 移动距离
+		var keyMove = [1, 15, -1, -15];
+
+		function main() {
+			// 左上右下  37-40
+			// 判断按键
+
+			var key = event.keyCode;
+			if (key >= 37 && key <= 40) {
+				// 如果按了移动按钮
+
+				// 获取人物
+				var gameCharacter = document.querySelector('#gameCharacter');
+				// 获取移动格
+				// 方向
+				var dir = key - 37
+				// var moveGrid = wrapper.children[gameCharacter.index - keyMove[dir]];
+				var moveGrid = getMoveGrid(gameCharacter, dir);
+				//判断格子 如果没有图片标签
+				if (!hasImgTag(moveGrid)) {
+					// 如果没有其他元素 则直接移动
+					changeImg(gameCharacter, moveGrid, 'gameCharacter', dir)
+				} else {
+					// 如果有图片标签 则判断是否为盒子
+					if (moveGrid.id == 'box') {
+						// 获取盒子
+						var box = document.querySelector('#box');
+						// 盒子移动后的格子
+						var moveGrid = getMoveGrid(box, dir);
+						// 如果移动的位置有物品则查看是否为球 或者空
+						if (moveGrid.id == 'ball' || !hasImgTag(moveGrid)) {
+							if (moveGrid.id == 'ball') {
+								setTimeout(function () {
+									var f = confirm("点击确认进入下一关");
+									if (f) {
+										if (level < g1.length - 1) {
+											level++;
+										}
+
+										createBox();
+									} else {
+										console.log('选择了否');
+										document.removeEventListener('keyup', main);
+										// 开启遮罩层
+										// wrapper.className += ' mask'
+									}
+								}, 50);
+							}
+							// 盒子和格子切换位置
+							changeImg(box, moveGrid, 'box', dir)
+							changeImg(gameCharacter, box, 'gameCharacter', dir)
+							// alert('游戏胜利')
+						}
+					}
+				}
+			}
+		}
+
+		// 判断是否有图片标签
+		function hasImgTag(ele) {
+			if (ele.firstElementChild) { // 没有则返回null
+				// 如果存在
+				return true
+			} else {
+				return false
+			}
+		}
+
+		// 获取移动格子
+		function getMoveGrid(ele, direction) {
+			return wrapper.children[ele.index - keyMove[direction]]
+		}
+
+		// 图片交接
+		function changeImg(oldEle, newEle, id, direction) {
+			newEle.innerHTML = '';
+			oldEle.id = '';
+			var img = oldEle.firstElementChild;
+			if (id == 'gameCharacter') {
+				// 如果移动的是游戏人物 则改变人物图片
+				img.src = guys[direction];
+			}
+			newEle.appendChild(img);
+			newEle.id = id;
+		}
+	</script>
+</body>
+
+</html>
