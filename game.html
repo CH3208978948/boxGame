@@ -181,12 +181,12 @@
 
 		// 关卡
 		// var level = 2;
-		localStorage.setItem('level', localStorage.getItem('level') || 0);
+		// localStorage.setItem('level', localStorage.getItem('level') || 0);
 
 		// 渲染关卡
 		createBox();
 		function createBox() {
-			var level = localStorage.getItem('level');
+			window.level = localStorage.getItem('level') || 0;
 
 			wrapper.innerHTML = '';
 			setLevel.children[level].selected = 'selected';
@@ -283,7 +283,7 @@
 									var f = confirm("点击确认进入下一关");
 									if (f) {
 										if (level < maps.length - 1) {
-											level++;
+											localStorage.setItem('level', ++level);
 										}
 
 										createBox();
